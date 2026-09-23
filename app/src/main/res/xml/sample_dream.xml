@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dream xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="com.example.customtvscreensaver.SettingsActivity"
+    android:icon="@drawable/ic_screensaver"
+    android:previewImage="@drawable/dream_preview" />

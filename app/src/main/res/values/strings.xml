@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">Custom TV Screensaver &amp; Prayer Times</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Screensaver Settings</string>
+    <string name="settings_subtitle">Choose how your living room display should look and calculate prayer times.</string>
+    <string name="location_mode_title">Location mode</string>
+    <string name="location_mode_auto">Automatic location</string>
+    <string name="location_mode_manual">Manual location</string>
+    <string name="location_mode_jordan">Jordan (official timetable)</string>
+    <string name="manual_city_title">City</string>
+    <string name="jordan_area_title">Jordan area</string>
+    <string name="calculation_method_title">Prayer calculation method</string>
+    <string name="method_umm_al_qura">Umm al-Qura</string>
+    <string name="method_isna">ISNA</string>
+    <string name="method_mwl">MWL</string>
+    <string name="slideshow_interval_title">Slideshow interval</string>
+    <plurals name="slideshow_interval_format">
+        <item quantity="one">%1$d second</item>
+        <item quantity="other">%1$d seconds</item>
+    </plurals>
+
+    <!-- Location status -->
+    <string name="location_current">Current location</string>
+    <string name="location_status_auto">Using this device\'s location.</string>
+    <string name="location_status_manual">Prayer times are calculated for %1$s.</string>
+    <string name="location_status_permission_missing">Location permission is off, so %1$s is used instead.</string>
+    <string name="grant_location_permission">Grant location permission</string>
+    <string name="open_system_settings">Open system settings</string>
+    <string name="jordan_status_loading">Loading the official timetable…</string>
+    <string name="jordan_status_ready">Official timetable in use for %1$s.</string>
+    <string name="jordan_status_unavailable">No official timetable is published for %1$s right now, so calculated times are used.</string>
+    <string name="jordan_status_not_configured">This build has no data token, so calculated times are used. See secrets.properties.example.</string>
+    <string name="jordan_status_no_areas">Could not load the Jordan area list. Connect to the network and reopen settings.</string>
+
+    <!-- Screensaver overlay -->
+    <string name="overlay_next_prayer">NEXT PRAYER: %1$s IN %2$s</string>
+    <string name="countdown_hours_minutes">%1$dh %2$dm</string>
+    <string name="countdown_minutes">%1$dm</string>
+    <string name="prayer_fajr">Fajr</string>
+    <string name="prayer_sunrise">Sunrise</string>
+    <string name="prayer_dhuhr">Dhuhr</string>
+    <string name="prayer_asr">Asr</string>
+    <string name="prayer_maghrib">Maghrib</string>
+    <string name="prayer_isha">Isha</string>
+
+    <!-- Manual location presets -->
+    <string name="city_abu_dhabi">Abu Dhabi, United Arab Emirates</string>
+    <string name="city_amman">Amman, Jordan</string>
+    <string name="city_baghdad">Baghdad, Iraq</string>
+    <string name="city_beirut">Beirut, Lebanon</string>
+    <string name="city_berlin">Berlin, Germany</string>
+    <string name="city_cairo">Cairo, Egypt</string>
+    <string name="city_casablanca">Casablanca, Morocco</string>
+    <string name="city_chicago">Chicago, United States</string>
+    <string name="city_damascus">Damascus, Syria</string>
+    <string name="city_dammam">Dammam, Saudi Arabia</string>
+    <string name="city_doha">Doha, Qatar</string>
+    <string name="city_dubai">Dubai, United Arab Emirates</string>
+    <string name="city_istanbul">Istanbul, Türkiye</string>
+    <string name="city_jakarta">Jakarta, Indonesia</string>
+    <string name="city_jeddah">Jeddah, Saudi Arabia</string>
+    <string name="city_jerusalem">Jerusalem</string>
+    <string name="city_karachi">Karachi, Pakistan</string>
+    <string name="city_kuala_lumpur">Kuala Lumpur, Malaysia</string>
+    <string name="city_kuwait_city">Kuwait City, Kuwait</string>
+    <string name="city_lahore">Lahore, Pakistan</string>
+    <string name="city_london">London, United Kingdom</string>
+    <string name="city_manama">Manama, Bahrain</string>
+    <string name="city_mecca">Mecca, Saudi Arabia</string>
+    <string name="city_medina">Medina, Saudi Arabia</string>
+    <string name="city_muscat">Muscat, Oman</string>
+    <string name="city_new_york">New York, United States</string>
+    <string name="city_paris">Paris, France</string>
+    <string name="city_riyadh">Riyadh, Saudi Arabia</string>
+    <string name="city_sydney">Sydney, Australia</string>
+    <string name="city_toronto">Toronto, Canada</string>
+</resources>

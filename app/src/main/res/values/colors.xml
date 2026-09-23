@@ -1,0 +1,8 @@
+<resources>
+    <color name="screen_background">#080B12</color>
+    <color name="overlay_surface">#CC111824</color>
+    <color name="overlay_text">#FFF9F1</color>
+    <color name="overlay_secondary">#B8C0CC</color>
+    <color name="accent_gold">#F3C969</color>
+    <color name="settings_background">#101722</color>
+</resources>

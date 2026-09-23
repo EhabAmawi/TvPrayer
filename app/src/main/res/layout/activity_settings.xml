@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_settings"
+    android:fillViewport="true"
+    android:focusable="false"
+    android:descendantFocusability="afterDescendants">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="64dp">
+        <TextView
+            android:id="@+id/settings_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_title"
+            android:textColor="@color/overlay_text"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/settings_subtitle"
+            android:textColor="@color/overlay_secondary"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/location_mode_title"
+            android:textColor="@color/overlay_text"
+            android:textSize="20sp" />
+        <Spinner
+            android:id="@+id/location_mode_spinner"
+            android:layout_width="420dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:clickable="true"
+            android:background="@drawable/settings_control_background" />
+        <TextView
+            android:id="@+id/location_status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/overlay_secondary"
+            android:textSize="14sp" />
+        <Button
+            android:id="@+id/location_permission_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:text="@string/grant_location_permission"
+            android:textColor="@color/overlay_text"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:background="@drawable/settings_control_background"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/manual_city_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/manual_city_title"
+            android:textColor="@color/overlay_text"
+            android:textSize="20sp"
+            android:visibility="gone" />
+        <Spinner
+            android:id="@+id/manual_city_spinner"
+            android:layout_width="420dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:clickable="true"
+            android:background="@drawable/settings_control_background"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/jordan_area_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/jordan_area_title"
+            android:textColor="@color/overlay_text"
+            android:textSize="20sp"
+            android:visibility="gone" />
+        <Spinner
+            android:id="@+id/jordan_area_spinner"
+            android:layout_width="420dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:clickable="true"
+            android:background="@drawable/settings_control_background"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/calculation_method_title"
+            android:textColor="@color/overlay_text"
+            android:textSize="20sp" />
+        <Spinner
+            android:id="@+id/calculation_method_spinner"
+            android:layout_width="420dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:clickable="true"
+            android:background="@drawable/settings_control_background" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/slideshow_interval_title"
+            android:textColor="@color/overlay_text"
+            android:textSize="20sp" />
+        <!-- min/max/progress are set from AppPreferences in code; see setupInterval(). -->
+        <SeekBar
+            android:id="@+id/interval_seekbar"
+            android:layout_width="420dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:clickable="true" />
+        <TextView
+            android:id="@+id/interval_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/accent_gold"
+            android:textSize="16sp" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,12 @@
+<resources>
+    <!--
+      No windowLightNavigationBar here: it needs API 27 (min is 26), and setting it to false
+      only restates the platform default on a device that has no navigation bar anyway.
+    -->
+    <style name="Theme.CustomTvScreensaver" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">@color/accent_gold</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:navigationBarColor">@color/screen_background</item>
+    </style>
+</resources>

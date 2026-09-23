@@ -1,0 +1,14 @@
+.gradle/
+build/
+*/build/
+local.properties
+.idea/
+*.iml
+captures/
+.kotlin/
+
+# Release signing material and API tokens - never commit
+keystore.properties
+secrets.properties
+*.jks
+*.keystore
