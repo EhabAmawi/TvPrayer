@@ -36,8 +36,8 @@ android {
         minSdk = 26
         // Google Play requires API 36 for new releases.
         targetSdk = 36
-        // Shares a Play listing with the phone (3.0.0+24) and Wear apps, so it must exceed their codes.
-        versionCode = 25
+        // Shares a Play listing with the phone and Wear apps: every upload needs a code Play has not seen.
+        versionCode = 26
         versionName = "3.0.0"
 
         buildConfigField(
