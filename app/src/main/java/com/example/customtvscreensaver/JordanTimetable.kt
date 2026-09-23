@@ -19,7 +19,7 @@ import java.util.TimeZone
  * device whose clock is set elsewhere.
  */
 object JordanTimetable {
-    /** First entry of cities.json is a "please choose" prompt, not a real area. */
+    /** First entry of cities.json: a "please choose" prompt, shown and selectable but with no timetable. */
     const val PLACEHOLDER_AREA = "الرجاء الاختيار"
 
     val ZONE: TimeZone = TimeZone.getTimeZone("Asia/Amman")
@@ -40,7 +40,6 @@ object JordanTimetable {
         val array = JSONObject(json).optJSONArray("cities") ?: return emptyList()
         return (0 until array.length())
             .mapNotNull { array.optString(it).takeIf(String::isNotBlank) }
-            .filter { it != PLACEHOLDER_AREA }
     }
 
     /** Maps each `dd/MM/yyyy` key in a monthly file to that day's prayers. */

@@ -2,41 +2,41 @@
 
     <uses-feature
         android:name="android.software.leanback"
-        android:required="false" />
+        android:required="true" />
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
-    <!--
-      ACCESS_FINE_LOCATION implies a GPS requirement, which would exclude most TVs.
-      Automatic location is a nicety here; the app falls back to a preset city without it.
-    -->
-    <uses-feature
-        android:name="android.hardware.location"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.location.gps"
-        android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- The screensaver checks for a connection before choosing online photos. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
         android:banner="@drawable/banner_tv"
-        android:icon="@drawable/ic_screensaver"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.CustomTvScreensaver">
 
         <activity
-            android:name=".SettingsActivity"
-            android:exported="true">
+            android:name=".PrayerTimesActivity"
+            android:exported="true"
+            android:theme="@style/Theme.JordanPrayerTimes.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".PrayerCalendarActivity"
+            android:exported="false" />
+
+        <!-- Exported because the system opens it as the dream's settingsActivity. -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="true" />
 
         <service
             android:name=".CustomDreamService"

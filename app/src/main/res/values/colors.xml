@@ -1,8 +1,18 @@
 <resources>
-    <color name="screen_background">#080B12</color>
-    <color name="overlay_surface">#CC111824</color>
-    <color name="overlay_text">#FFF9F1</color>
-    <color name="overlay_secondary">#B8C0CC</color>
-    <color name="accent_gold">#F3C969</color>
-    <color name="settings_background">#101722</color>
+    <!--
+      Mirrors the phone app's Material 3 dark scheme (lib/core/constants/app_colors.dart in
+      Jordan_Prayer_Times_App). The TV is always dark, so only the dark values are used.
+    -->
+    <color name="screen_background">#121212</color>          <!-- surface -->
+    <color name="settings_background">#121212</color>        <!-- surface -->
+    <color name="surface_container">#1E1E1E</color>          <!-- surfaceContainerHighest -->
+    <color name="overlay_surface">#CC1E1E1E</color>          <!-- surfaceContainerHighest, translucent over photos -->
+    <color name="overlay_text">#E0E0E0</color>               <!-- onSurface -->
+    <color name="overlay_secondary">#BDBDBD</color>          <!-- onSurfaceVariant -->
+    <color name="accent_teal">#80CBC4</color>                <!-- primary -->
+    <color name="primary_container">#005D52</color>          <!-- primaryContainer -->
+    <color name="gradient_start">#004D40</color>             <!-- appBarGradientDark -->
+    <color name="gradient_end">#00695C</color>
+    <color name="accent_gold">#FFB300</color>                <!-- currentPrayer: next prayer + countdown only -->
+    <color name="ic_launcher_background">#FFFFFF</color>      <!-- the phone app's icon background -->
 </resources>

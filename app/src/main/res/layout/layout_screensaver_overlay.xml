@@ -24,12 +24,20 @@
         android:textColor="@color/overlay_secondary"
         android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/hijri_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/accent_teal"
+        android:textSize="15sp" />
+
     <View
         android:layout_width="120dp"
         android:layout_height="1dp"
         android:layout_marginTop="18dp"
         android:layout_marginBottom="16dp"
-        android:background="@color/accent_gold" />
+        android:background="@color/accent_teal" />
 
     <TextView
         android:id="@+id/location_text"

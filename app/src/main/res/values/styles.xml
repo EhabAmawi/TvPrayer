@@ -5,8 +5,31 @@
     -->
     <style name="Theme.CustomTvScreensaver" parent="Theme.AppCompat.NoActionBar">
         <item name="android:fontFamily">sans</item>
-        <item name="android:colorAccent">@color/accent_gold</item>
+        <item name="android:colorAccent">@color/accent_teal</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:navigationBarColor">@color/screen_background</item>
+    </style>
+
+    <!--
+      Launch splash, as in the Wear OS app: the app icon on the app's dark surface, then the
+      normal theme. Applied only to the launcher activity.
+    -->
+    <style name="Theme.JordanPrayerTimes.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/screen_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.CustomTvScreensaver</item>
+    </style>
+
+    <!-- The calendar's navigator buttons; same focus treatment as the home screen buttons. -->
+    <style name="CalendarButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:background">@drawable/settings_control_background</item>
+        <item name="android:focusable">true</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/overlay_text</item>
+        <item name="android:textSize">18sp</item>
     </style>
 </resources>

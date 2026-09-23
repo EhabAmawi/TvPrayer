@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_settings"
+    android:orientation="vertical"
+    android:paddingStart="56dp"
+    android:paddingTop="48dp"
+    android:paddingEnd="56dp"
+    android:paddingBottom="40dp">
+    <!--
+      Vertical space is tight at 1080p: targeting API 36, Arabic always renders with the taller
+      "elegant" line metrics (elegantTextHeight is ignored), so keep margins lean.
+    -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:textColor="@color/overlay_text"
+                android:textSize="64sp" />
+
+            <TextView
+                android:id="@+id/date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/overlay_secondary"
+                android:textSize="20sp" />
+
+            <!-- Hijri date under the Gregorian one, as in the phone app's header. -->
+            <TextView
+                android:id="@+id/hijri_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/accent_teal"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <!-- Shows the current area; pressing it opens the area list. -->
+        <Button
+            android:id="@+id/city_button"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/settings_control_background"
+            android:drawableEnd="@drawable/ic_arrow_drop_down"
+            android:ellipsize="end"
+            android:maxWidth="400dp"
+            android:maxLines="1"
+            android:drawablePadding="8dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingStart="24dp"
+            android:paddingEnd="16dp"
+            android:textAllCaps="false"
+            android:textColor="@color/overlay_text"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/calendar_button"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/settings_control_background"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:text="@string/open_calendar"
+            android:textColor="@color/overlay_text" />
+
+        <Button
+            android:id="@+id/settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:background="@drawable/settings_control_background"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:text="@string/open_settings"
+            android:textColor="@color/overlay_text" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/next_prayer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/accent_gold"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <!-- One card per PrayerName, inflated from item_prayer_time.xml by PrayerTimesActivity. -->
+    <LinearLayout
+        android:id="@+id/prayer_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal" />
+
+    <TextView
+        android:id="@+id/screensaver_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/screensaver_hint"
+        android:textColor="@color/overlay_secondary"
+        android:textSize="14sp" />
+</LinearLayout>

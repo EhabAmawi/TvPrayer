@@ -8,6 +8,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONArray
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -21,8 +22,8 @@ import java.util.concurrent.TimeUnit
  *
  * Everything here degrades to null rather than throwing: only a rolling window of months is
  * published (September is typically absent in August), one area has no file at all, and the
- * token may not be configured in this build. Every one of those cases means "caller should use
- * the adhan calculation instead", which is why nothing is surfaced as an error.
+ * token may not be configured in this build. Every one of those cases means "no times
+ * available", which callers show as such, so nothing is surfaced as an error.
  */
 class JordanPrayerRepository(context: Context) {
     private val cacheDir = File(context.filesDir, CACHE_DIR)
@@ -53,7 +54,7 @@ class JordanPrayerRepository(context: Context) {
         }
     }
 
-    /** Null when the timetable cannot answer for [now]; the caller should then use adhan. */
+    /** Null when the timetable cannot answer for [now]. */
     suspend fun snapshot(area: String, now: Date): PrayerSnapshot? = withContext(Dispatchers.IO) {
         mutex.withLock {
             val today = dayTimes(area, now) ?: return@withLock null
@@ -68,6 +69,64 @@ class JordanPrayerRepository(context: Context) {
         }
     }
 
+    /**
+     * Downloads every month the feed has published for [area], past months included (as the
+     * phone app does), so the TV keeps official times offline, across month boundaries, and has
+     * them all for the calendar. The current month goes first so today is on disk soonest. Costs
+     * one directory listing per call; months already on disk are not downloaded again. Returns
+     * false when the listing could not be fetched, in which case whatever is cached keeps being
+     * used.
+     */
+    suspend fun prefetch(area: String, now: Date): Boolean = withContext(Dispatchers.IO) {
+        if (!isConfigured) return@withContext false
+        val listing = fetch(MONTHLY_PATH, ACCEPT_JSON) ?: return@withContext false
+        val names = runCatching {
+            val array = JSONArray(listing)
+            List(array.length()) { array.getJSONObject(it).optString("name") }
+        }.getOrDefault(emptyList())
+        val currentMonth = monthKey(now)
+        val suffix = "_$area$JSON_SUFFIX"
+        names.asSequence()
+            .filter { it.endsWith(suffix) }
+            .map { it.removeSuffix(suffix) }
+            .filter { MONTH_KEY.matches(it) }
+            // yyyy_MM sorts lexically; the current month first, then oldest to newest.
+            .sortedWith(compareBy<String> { it != currentMonth }.thenBy { it })
+            .forEach { monthKey ->
+                mutex.withLock {
+                    val cacheFile = monthFile(area, monthKey)
+                    if (cacheFile.exists()) return@withLock
+                    val body = fetch("$MONTHLY_PATH/${monthKey}$suffix") ?: return@withLock
+                    runCatching {
+                        cacheDir.mkdirs()
+                        cacheFile.writeText(body)
+                    }
+                    lastFailureAt.remove("$area|$monthKey")
+                }
+            }
+        true
+    }
+
+    /**
+     * Every day stored on disk for [area], oldest first, for the calendar. Only months [prefetch]
+     * has stored are listed, so nothing new is downloaded here; a week-old month may still be
+     * revalidated through [month] like any other read.
+     */
+    suspend fun calendar(area: String): List<CalendarDay> = withContext(Dispatchers.IO) {
+        mutex.withLock {
+            val prefix = "${Uri.encode(area)}_"
+            cacheDir.listFiles().orEmpty()
+                .map { it.name }
+                .filter { it.startsWith(prefix) && it.endsWith(JSON_SUFFIX) }
+                .map { it.removePrefix(prefix).removeSuffix(JSON_SUFFIX) }
+                .filter { MONTH_KEY.matches(it) }
+                .flatMap { monthKey -> month(area, monthKey).orEmpty().values }
+                .filter { it.isNotEmpty() }
+                .map { prayers -> CalendarDay(prayers.first().time, prayers) }
+                .sortedBy { it.date }
+        }
+    }
+
     private fun dayTimes(area: String, date: Date): List<TimedPrayer>? =
         month(area, monthKey(date))?.get(dateKey(date))?.takeIf { it.isNotEmpty() }
 
@@ -78,7 +137,7 @@ class JordanPrayerRepository(context: Context) {
         val body = readOrFetch(
             key = key,
             remotePath = "$MONTHLY_PATH/$fileName",
-            cacheFile = File(cacheDir, "${Uri.encode(area)}_$monthKey$JSON_SUFFIX")
+            cacheFile = monthFile(area, monthKey)
         ) ?: return null
         return runCatching { JordanTimetable.parseMonth(body) }
             .getOrNull()
@@ -94,7 +153,7 @@ class JordanPrayerRepository(context: Context) {
     private fun readOrFetch(key: String, remotePath: String, cacheFile: File): String? {
         val cachedAt = if (cacheFile.exists()) cacheFile.lastModified() else 0L
         val isFresh = cachedAt > 0 && System.currentTimeMillis() - cachedAt < REFRESH_AFTER_MILLIS
-        if (!isFresh && shouldAttemptFetch(key)) {
+        if (!isFresh && shouldAttemptFetch(key, hasCache = cachedAt > 0)) {
             val fetched = fetch(remotePath)
             if (fetched != null) {
                 lastFailureAt.remove(key)
@@ -110,18 +169,27 @@ class JordanPrayerRepository(context: Context) {
         return runCatching { cacheFile.readText() }.getOrNull()
     }
 
-    private fun shouldAttemptFetch(key: String): Boolean {
+    private fun monthFile(area: String, monthKey: String) =
+        File(cacheDir, "${Uri.encode(area)}_$monthKey$JSON_SUFFIX")
+
+    /**
+     * With nothing cached (first setup on a flaky connection) a failure is retried after a minute,
+     * so the city list and times appear as soon as the network does; with a cache to fall back on,
+     * after six hours, so a permanently missing month is not re-requested every overlay tick.
+     */
+    private fun shouldAttemptFetch(key: String, hasCache: Boolean): Boolean {
         if (!isConfigured) return false
         val failedAt = lastFailureAt[key] ?: return true
-        return System.currentTimeMillis() - failedAt >= RETRY_AFTER_MILLIS
+        val retryAfter = if (hasCache) RETRY_AFTER_MILLIS else FIRST_FETCH_RETRY_MILLIS
+        return System.currentTimeMillis() - failedAt >= retryAfter
     }
 
-    private fun fetch(remotePath: String): String? {
+    private fun fetch(remotePath: String, accept: String = ACCEPT_RAW): String? {
         val encoded = remotePath.split('/').joinToString("/") { Uri.encode(it) }
         val request = Request.Builder()
             .url("$API_BASE/$REPO/contents/$encoded")
             .header("Authorization", "Bearer ${BuildConfig.JORDAN_API_TOKEN}")
-            .header("Accept", "application/vnd.github.raw+json")
+            .header("Accept", accept)
             .header("X-GitHub-Api-Version", "2022-11-28")
             .build()
         return try {
@@ -157,8 +225,16 @@ class JordanPrayerRepository(context: Context) {
         const val AREAS_KEY = "areas"
         const val MONTH_PATTERN = "yyyy_MM"
         const val DATE_PATTERN = "dd/MM/yyyy"
+        val MONTH_KEY = Regex("""\d{4}_\d{2}""")
         const val TIMEOUT_SECONDS = 15L
+
+        /** File contents as-is. */
+        const val ACCEPT_RAW = "application/vnd.github.raw+json"
+
+        /** Directory listings, which have no raw form. */
+        const val ACCEPT_JSON = "application/vnd.github+json"
         val REFRESH_AFTER_MILLIS = TimeUnit.DAYS.toMillis(7)
         val RETRY_AFTER_MILLIS = TimeUnit.HOURS.toMillis(6)
+        val FIRST_FETCH_RETRY_MILLIS = TimeUnit.MINUTES.toMillis(1)
     }
 }

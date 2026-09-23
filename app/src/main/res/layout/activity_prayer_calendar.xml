@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_settings"
+    android:orientation="vertical"
+    android:padding="56dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/calendar_title"
+        android:textColor="@color/accent_teal"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <!-- Day navigator: step through the stored days, or switch to the whole list. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/previous_day_button"
+            style="@style/CalendarButton"
+            android:text="@string/calendar_previous_day" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/day_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/overlay_text"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/day_hijri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/accent_teal"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/next_day_button"
+            style="@style/CalendarButton"
+            android:text="@string/calendar_next_day" />
+
+        <Button
+            android:id="@+id/mode_button"
+            style="@style/CalendarButton"
+            android:layout_marginStart="16dp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:layout_weight="1">
+
+        <!-- One day: a card per PrayerName, as on the home screen. -->
+        <LinearLayout
+            android:id="@+id/day_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal" />
+
+        <!-- All days: one row per stored day, filled by PrayerCalendarActivity. -->
+        <ScrollView
+            android:id="@+id/all_days_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/all_days_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/empty_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/calendar_empty"
+            android:textColor="@color/overlay_secondary"
+            android:textSize="20sp"
+            android:visibility="gone" />
+    </FrameLayout>
+</LinearLayout>

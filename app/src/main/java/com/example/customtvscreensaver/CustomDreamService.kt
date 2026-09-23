@@ -1,20 +1,21 @@
 package com.example.customtvscreensaver
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.service.dreams.DreamService
-import android.text.format.DateFormat
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import coil.ImageLoader
 import coil.request.ImageRequest
 import com.example.customtvscreensaver.databinding.LayoutScreensaverOverlayBinding
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,28 +24,22 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.random.Random
+import okhttp3.OkHttpClient
 
 class CustomDreamService : DreamService() {
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.Main.immediate + serviceJob)
-    private val locationClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
-    private val jordanRepository by lazy { JordanPrayerRepository(this) }
+    private val prayerReader by lazy { PrayerReader(this) }
 
-    // Honours the user's 12/24-hour setting and locale date conventions.
-    private val timeFormat by lazy { DateFormat.getTimeFormat(this) }
-    private val dateFormat by lazy {
-        SimpleDateFormat(
-            DateFormat.getBestDateTimePattern(Locale.getDefault(), DATE_SKELETON),
-            Locale.getDefault()
-        )
-    }
+    // Honours locale date conventions.
+    private val dateFormat by lazy { gregorianFormat(HEADER_DATE) }
 
     private lateinit var imageLoader: ImageLoader
     private lateinit var imageView: ImageView
+    private lateinit var creditText: TextView
     private lateinit var overlay: LayoutScreensaverOverlayBinding
     private lateinit var preferences: AppPreferences
 
@@ -53,8 +48,9 @@ class CustomDreamService : DreamService() {
     private var burnInJob: Job? = null
     private var photoIndex = 0
 
-    /** Populated asynchronously; null until (and unless) a device fix arrives. */
-    private var autoLocation: ResolvedLocation? = null
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(AppLanguage.wrap(newBase))
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -64,6 +60,16 @@ class CustomDreamService : DreamService() {
         preferences = AppPreferences(this)
         imageLoader = ImageLoader.Builder(this)
             .crossfade(CROSSFADE_MILLIS)
+            // Wikimedia blocks generic client User-Agents, so identify the app.
+            .okHttpClient {
+                OkHttpClient.Builder()
+                    .addInterceptor { chain ->
+                        chain.proceed(
+                            chain.request().newBuilder().header("User-Agent", USER_AGENT).build()
+                        )
+                    }
+                    .build()
+            }
             .build()
     }
 
@@ -73,7 +79,6 @@ class CustomDreamService : DreamService() {
         startSlideshow()
         startOverlayUpdates()
         startBurnInProtection()
-        requestAutoLocation()
     }
 
     override fun onDreamingStopped() {
@@ -107,7 +112,12 @@ class CustomDreamService : DreamService() {
      * (layout_screensaver_overlay.xml). Panel placement lives here, panel contents live there.
      */
     private fun buildContentView(): View {
-        val root = FrameLayout(this).apply { setBackgroundColor(Color.BLACK) }
+        val root = FrameLayout(this).apply {
+            setBackgroundColor(Color.BLACK)
+            // A dream window does not pick up the wrapped configuration's direction by itself, so
+            // Arabic would keep the panel and its text laid out left-to-right.
+            layoutDirection = resources.configuration.layoutDirection
+        }
         imageView = ImageView(this).apply {
             scaleType = ImageView.ScaleType.CENTER_CROP
             setBackgroundResource(R.drawable.dream_preview)
@@ -120,6 +130,25 @@ class CustomDreamService : DreamService() {
                 FrameLayout.LayoutParams.MATCH_PARENT
             )
         )
+        // CC BY / BY-SA require the credit to be visible with the photo.
+        creditText = TextView(this).apply {
+            setTextColor(ContextCompat.getColor(context, R.color.overlay_text))
+            textSize = CREDIT_TEXT_SP
+            // Same translucent surface as the info panel, so it stays legible on bright photos.
+            setBackgroundResource(R.drawable.credit_background)
+        }
+        root.addView(
+            creditText,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM or Gravity.START
+            ).apply {
+                // Start/end rather than left/right so Arabic mirrors the layout.
+                marginStart = dp(OVERLAY_MARGIN_DP)
+                bottomMargin = dp(OVERLAY_MARGIN_DP)
+            }
+        )
         overlay = LayoutScreensaverOverlayBinding.inflate(LayoutInflater.from(this), root, false)
         root.addView(
             overlay.root,
@@ -128,8 +157,8 @@ class CustomDreamService : DreamService() {
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 Gravity.BOTTOM or Gravity.END
             ).apply {
-                val margin = dp(OVERLAY_MARGIN_DP)
-                setMargins(0, 0, margin, margin)
+                marginEnd = dp(OVERLAY_MARGIN_DP)
+                bottomMargin = dp(OVERLAY_MARGIN_DP)
             }
         )
         return root
@@ -147,21 +176,55 @@ class CustomDreamService : DreamService() {
         }
     }
 
+    /**
+     * The online/offline choice is re-read per photo, like the interval. An online photo that
+     * cannot load (no network, Commons down) is replaced by a bundled one, credit included.
+     */
     private fun showPhoto(index: Int) {
-        val photo = PhotoRepository.at(index)
+        // Online chosen but no internet: go straight to the bundled photos rather than waiting on
+        // a request that can only fail. The per-photo fallback below still covers a flaky link.
+        val online = preferences.useOnlinePhotos && hasInternet()
+        load(PhotoRepository.at(online, index)) {
+            if (online) load(PhotoRepository.fallback(index))
+        }
+    }
+
+    private fun load(photo: Photo, onError: () -> Unit = {}) {
+        val current = imageView.drawable
         imageLoader.enqueue(
             ImageRequest.Builder(this)
-                .data(photo.remoteUrl)
+                .data(photo.data)
+                // Keep the current photo up while the next one loads, and if it fails, so the
+                // slideshow crossfades photo to photo instead of flashing the background.
+                .placeholder(current)
+                .error(current)
                 .target(imageView)
-                .listener(onError = { _, _ -> imageView.setImageResource(photo.localDrawable) })
+                .listener(
+                    onSuccess = { _, _ -> showCredit(photo) },
+                    onError = { _, _ -> onError() }
+                )
                 .build()
         )
     }
 
+    private fun showCredit(photo: Photo) {
+        creditText.text = getString(R.string.photo_credit, getString(photo.place), photo.author, photo.license)
+    }
+
+    private fun hasInternet(): Boolean {
+        val connectivity = getSystemService(ConnectivityManager::class.java) ?: return false
+        val capabilities = connectivity.getNetworkCapabilities(connectivity.activeNetwork)
+            ?: return false
+        // Validated, not merely connected: Wi-Fi without working internet counts as offline.
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+    }
+
     /** No target, so this only warms Coil's caches for the next transition. */
     private fun preloadPhoto(index: Int) {
+        if (!preferences.useOnlinePhotos || !hasInternet()) return
         imageLoader.enqueue(
-            ImageRequest.Builder(this).data(PhotoRepository.at(index).remoteUrl).build()
+            ImageRequest.Builder(this).data(PhotoRepository.at(true, index).data).build()
         )
     }
 
@@ -171,66 +234,24 @@ class CustomDreamService : DreamService() {
      */
     private fun startOverlayUpdates() {
         overlayJob = serviceScope.launch {
+            updateOverlay()
+            if (prayerReader.prefetch(Date())) updateOverlay()
             while (isActive) {
-                updateOverlay()
                 delay(millisUntilNextMinute())
+                updateOverlay()
             }
         }
     }
 
     private suspend fun updateOverlay() {
         val now = Date()
-        // Read fresh each tick so settings changes take effect while the dream is running.
-        val reading = when (preferences.locationMode) {
-            LocationMode.JORDAN_OFFICIAL -> jordanReading(now)
-            LocationMode.AUTO -> calculated(autoLocation ?: City.DEFAULT.toLocation(), now)
-            LocationMode.MANUAL -> calculated(preferences.manualCity.toLocation(), now)
-        }
+        val reading = prayerReader.read(now)
 
-        overlay.timeText.text = timeFormat.format(now)
+        overlay.timeText.text = clockFormat(preferences.use24HourClock).format(now)
         overlay.dateText.text = dateFormat.format(now)
+        overlay.hijriText.text = hijriDate(now, preferences.hijriOffsetDays)
         overlay.locationText.text = reading.label
-        overlay.nextPrayerText.text = getString(
-            R.string.overlay_next_prayer,
-            getString(reading.snapshot.next.labelRes).uppercase(Locale.getDefault()),
-            formatCountdown(reading.snapshot.remainingMillis)
-        )
-    }
-
-    /**
-     * The official timetable only covers a rolling window of months, so a miss silently falls
-     * back to calculating for that area's coordinates. The label stays the area name either way,
-     * because the location is the same - only the source of the times differs.
-     */
-    private suspend fun jordanReading(now: Date): OverlayReading {
-        val area = preferences.jordanArea ?: return calculated(City.DEFAULT.toLocation(), now)
-        jordanRepository.snapshot(area, now)?.let { return OverlayReading(area, it) }
-        val (latitude, longitude) = JordanAreas.fallbackCoordinates(area)
-        return OverlayReading(area, calculate(latitude, longitude, now))
-    }
-
-    private fun calculated(location: ResolvedLocation, now: Date) = OverlayReading(
-        label = getString(location.labelRes),
-        snapshot = calculate(location.latitude, location.longitude, now)
-    )
-
-    private fun calculate(latitude: Double, longitude: Double, now: Date) = PrayerManager(
-        latitude = latitude,
-        longitude = longitude,
-        method = preferences.calculationMethod
-    ).snapshot(now)
-
-    private data class OverlayReading(val label: String, val snapshot: PrayerSnapshot)
-
-    private fun formatCountdown(remainingMillis: Long): String {
-        val totalMinutes = remainingMillis / 60_000L
-        val hours = totalMinutes / 60
-        val minutes = totalMinutes % 60
-        return if (hours > 0) {
-            getString(R.string.countdown_hours_minutes, hours, minutes)
-        } else {
-            getString(R.string.countdown_minutes, minutes)
-        }
+        overlay.nextPrayerText.text = nextPrayerText(reading)
     }
 
     private fun startBurnInProtection() {
@@ -240,6 +261,8 @@ class CustomDreamService : DreamService() {
                 // Translation rather than margins: same visible nudge, no layout pass.
                 overlay.root.translationX = randomShiftPx()
                 overlay.root.translationY = randomShiftPx()
+                creditText.translationX = randomShiftPx()
+                creditText.translationY = randomShiftPx()
             }
         }
     }
@@ -249,36 +272,14 @@ class CustomDreamService : DreamService() {
         return (if (Random.nextBoolean()) magnitude else -magnitude).toFloat()
     }
 
-    /**
-     * A dream cannot prompt for permissions, so this is best-effort only: without a grant (see
-     * SettingsActivity) the overlay stays on the fallback city.
-     */
-    @SuppressLint("MissingPermission")
-    private fun requestAutoLocation() {
-        if (preferences.locationMode != LocationMode.AUTO) return
-        if (!LocationPermissions.isGranted(this)) return
-        locationClient.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
-            .addOnSuccessListener { location ->
-                if (location == null) return@addOnSuccessListener
-                autoLocation = ResolvedLocation(
-                    latitude = location.latitude,
-                    longitude = location.longitude,
-                    labelRes = R.string.location_current
-                )
-                // The callback can outlive the dream; only touch views while it is running.
-                if (overlayJob?.isActive == true) serviceScope.launch { updateOverlay() }
-            }
-    }
-
-    private fun millisUntilNextMinute(): Long =
-        (60_000L - System.currentTimeMillis() % 60_000L).coerceAtLeast(1_000L)
-
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 
     private companion object {
-        const val DATE_SKELETON = "EEEEdMMMM"
         const val CROSSFADE_MILLIS = 800
         const val OVERLAY_MARGIN_DP = 48
+        const val CREDIT_TEXT_SP = 13f
+        const val USER_AGENT =
+            "JordanPrayerTimesTV/${BuildConfig.VERSION_NAME} (https://github.com/mbanifawaz)"
         const val BURN_IN_INTERVAL_MILLIS = 60_000L
         const val BURN_IN_MIN_SHIFT_PX = 2
         const val BURN_IN_MAX_SHIFT_PX = 5

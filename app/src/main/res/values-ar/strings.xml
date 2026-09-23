@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Arabic. Shared terms follow the phone app (lib/l10n/app_ar.arb in Jordan_Prayer_Times_App). -->
+<resources>
+    <!-- Prayer times screen -->
+    <string name="open_settings">الإعدادات</string>
+    <string name="back">رجوع</string>
+    <string name="time_unknown">--:--</string>
+    <!-- Prayer calendar -->
+    <string name="open_calendar">تقويم الصلاة</string>
+    <string name="calendar_title">تقويم أوقات الصلاة</string>
+    <string name="calendar_previous_day">‹ اليوم السابق</string>
+    <string name="calendar_next_day">اليوم التالي ›</string>
+    <string name="calendar_all_days">كل الأيام</string>
+    <string name="calendar_single_day">يوم واحد</string>
+    <string name="calendar_today">اليوم</string>
+    <string name="calendar_today_title">%1$s · %2$s</string>
+    <string name="calendar_range">%1$s – %2$s</string>
+    <string name="calendar_empty">لا توجد أوقات صلاة مخزنة بعد.\nاختر مدينتك واتصل بالإنترنت.</string>
+    <string name="choose_city_prompt">اختر مدينتك لعرض أوقات الصلاة</string>
+    <string name="times_unavailable">أوقات الصلاة غير متوفرة حالياً</string>
+    <string name="screensaver_hint">متوفر أيضاً كشاشة توقف للتلفاز: الإعدادات › تفضيلات الجهاز › شاشة التوقف.</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="jordan_area_title">المدينة</string>
+    <string name="language_title">اللغة</string>
+    <string name="language_system">إعدادات النظام</string>
+    <string name="hijri_offset_title">تعديل التاريخ الهجري</string>
+    <string name="hijri_offset_none">بدون تعديل</string>
+    <plurals name="hijri_offset_plus">
+        <item quantity="zero">+%1$d يوم</item>
+        <item quantity="one">+%1$d يوم</item>
+        <item quantity="two">+%1$d يوم</item>
+        <item quantity="few">+%1$d أيام</item>
+        <item quantity="many">+%1$d يوم</item>
+        <item quantity="other">+%1$d يوم</item>
+    </plurals>
+    <plurals name="hijri_offset_minus">
+        <item quantity="zero">-%1$d يوم</item>
+        <item quantity="one">-%1$d يوم</item>
+        <item quantity="two">-%1$d يوم</item>
+        <item quantity="few">-%1$d أيام</item>
+        <item quantity="many">-%1$d يوم</item>
+        <item quantity="other">-%1$d يوم</item>
+    </plurals>
+    <!-- The phone app's Arabic Hijri format: day, month, year. -->
+    <string name="hijri_date_format">%1$s %2$s %3$s</string>
+    <string-array name="hijri_months">
+        <item>محرم</item>
+        <item>صفر</item>
+        <item>ربيع الأول</item>
+        <item>ربيع الآخر</item>
+        <item>جمادى الأولى</item>
+        <item>جمادى الآخرة</item>
+        <item>رجب</item>
+        <item>شعبان</item>
+        <item>رمضان</item>
+        <item>شوال</item>
+        <item>ذو القعدة</item>
+        <item>ذو الحجة</item>
+    </string-array>
+    <string name="photos_title">صور شاشة التوقف</string>
+    <string name="photos_online">عبر الإنترنت (ويكيميديا كومنز)</string>
+    <string name="photos_offline">بدون إنترنت (مدمجة)</string>
+    <string name="about_photos">صور شاشة التوقف من ويكيميديا كومنز، وتُنسب كل صورة لصاحبها على الشاشة.</string>
+    <string name="photo_credit">%1$s · تصوير: %2$s · %3$s</string>
+    <string name="photo_place_king_abdullah_mosque">مسجد الملك عبدالله الأول، عمّان</string>
+    <string name="photo_place_grand_husseini_mosque">المسجد الحسيني الكبير، عمّان</string>
+    <string name="photo_place_abu_darwish_mosque">مسجد أبو درويش، عمّان</string>
+    <string name="photo_place_dome_of_the_rock">قبة الصخرة، القدس</string>
+    <string name="photo_place_amman">عمّان من جبل القلعة</string>
+    <string name="photo_place_amman_citadel">قلعة عمّان</string>
+    <string name="photo_place_petra_monastery">الدير، البترا</string>
+    <string name="photo_place_petra">البترا</string>
+    <string name="photo_place_wadi_rum">وادي رم</string>
+    <string name="photo_place_qasr_kharana">قصر الخرانة</string>
+    <string name="photo_place_dead_sea">البحر الميت</string>
+    <string name="photo_place_mount_nebo">الإطلالة من جبل نيبو</string>
+    <string name="photo_place_jerash">جرش</string>
+    <string name="photo_place_wadi_mujib">وادي الموجب</string>
+    <string name="photo_place_dana">محمية ضانا للمحيط الحيوي</string>
+    <string name="clock_format_title">صيغة الساعة</string>
+    <string name="clock_12_hour">12 ساعة (3:55 م)</string>
+    <string name="clock_24_hour">24 ساعة (15:55)</string>
+    <string name="slideshow_interval_title">مدة عرض الصورة</string>
+    <plurals name="slideshow_interval_format">
+        <item quantity="zero">%1$d ثانية</item>
+        <item quantity="one">ثانية واحدة</item>
+        <item quantity="two">ثانيتان</item>
+        <item quantity="few">%1$d ثوانٍ</item>
+        <item quantity="many">%1$d ثانية</item>
+        <item quantity="other">%1$d ثانية</item>
+    </plurals>
+
+    <!-- About -->
+    <string name="about_title">حول التطبيق</string>
+    <string name="about_version">الإصدار %1$s</string>
+    <string name="about_credits_title">تطوير</string>
+    <string name="about_source">أوقات الصلاة مقدمة من وزارة الأوقاف والشؤون والمقدسات الإسلامية، الأردن.</string>
+
+    <!-- Timetable status -->
+    <string name="jordan_status_loading">جارٍ تحميل التقويم الرسمي…</string>
+    <string name="jordan_status_ready">التقويم الرسمي مستخدم لـ %1$s.</string>
+    <string name="jordan_status_unavailable">لا يوجد تقويم رسمي منشور لـ %1$s حالياً.</string>
+    <string name="jordan_areas_unavailable">لم يتم تحميل قائمة المدن بعد. اتصل بالإنترنت.</string>
+    <string name="jordan_status_not_configured">هذه النسخة بدون رمز البيانات، لذا لا يمكن تحميل أوقات الصلاة.</string>
+
+    <!-- Screensaver overlay -->
+    <string name="overlay_next_prayer">الصلاة القادمة: %1$s بعد %2$s</string>
+    <string name="countdown_hours_minutes">%1$dس %2$dد</string>
+    <string name="countdown_minutes">%1$dد</string>
+    <string name="prayer_fajr">الفجر</string>
+    <string name="prayer_sunrise">الشروق</string>
+    <string name="prayer_dhuhr">الظهر</string>
+    <string name="prayer_asr">العصر</string>
+    <string name="prayer_maghrib">المغرب</string>
+    <string name="prayer_isha">العشاء</string>
+</resources>

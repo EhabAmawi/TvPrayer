@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The photo credit pill in the dream: the overlay surface, rounded, with room around the text. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/overlay_surface" />
+    <corners android:radius="8dp" />
+    <padding android:left="12dp" android:top="6dp" android:right="12dp" android:bottom="6dp" />
+</shape>

@@ -1,37 +1,103 @@
 <resources>
-    <string name="app_name">Custom TV Screensaver &amp; Prayer Times</string>
+    <!-- app_name is injected per build type via resValue in app/build.gradle.kts, as on the phone. -->
+
+    <!-- Prayer times screen -->
+    <string name="open_settings">Settings</string>
+    <string name="back">Back</string>
+    <string name="time_unknown">--:--</string>
+    <!-- Prayer calendar (same wording as the phone app) -->
+    <string name="open_calendar">Prayer Calendar</string>
+    <string name="calendar_title">Prayer Times Calendar</string>
+    <string name="calendar_previous_day">‹ Previous day</string>
+    <string name="calendar_next_day">Next day ›</string>
+    <string name="calendar_all_days">All days</string>
+    <string name="calendar_single_day">One day</string>
+    <string name="calendar_today">Today</string>
+    <string name="calendar_today_title">%1$s · %2$s</string>
+    <string name="calendar_range">%1$s – %2$s</string>
+    <string name="calendar_empty">No prayer times downloaded yet.\nChoose your city and connect to the internet.</string>
+    <string name="choose_city_prompt">Choose your city to see prayer times</string>
+    <string name="times_unavailable">Prayer times are not available right now</string>
+    <string name="screensaver_hint">Also available as your TV screensaver: Settings › Device Preferences › Screen saver.</string>
 
     <!-- Settings screen -->
-    <string name="settings_title">Screensaver Settings</string>
-    <string name="settings_subtitle">Choose how your living room display should look and calculate prayer times.</string>
-    <string name="location_mode_title">Location mode</string>
-    <string name="location_mode_auto">Automatic location</string>
-    <string name="location_mode_manual">Manual location</string>
-    <string name="location_mode_jordan">Jordan (official timetable)</string>
-    <string name="manual_city_title">City</string>
-    <string name="jordan_area_title">Jordan area</string>
-    <string name="calculation_method_title">Prayer calculation method</string>
-    <string name="method_umm_al_qura">Umm al-Qura</string>
-    <string name="method_isna">ISNA</string>
-    <string name="method_mwl">MWL</string>
+    <string name="settings_title">Settings</string>
+    <string name="jordan_area_title">City</string>
+    <string name="photos_title">Screensaver photos</string>
+    <string name="photos_online">Online (Wikimedia Commons)</string>
+    <string name="photos_offline">Offline (built-in)</string>
+    <string name="about_photos">Screensaver photos are from Wikimedia Commons; each is credited on screen.</string>
+    <!-- Place, then author and license verbatim from Commons. -->
+    <string name="photo_credit">%1$s · Photo: %2$s · %3$s</string>
+    <string name="photo_place_king_abdullah_mosque">King Abdullah I Mosque, Amman</string>
+    <string name="photo_place_grand_husseini_mosque">Grand Husseini Mosque, Amman</string>
+    <string name="photo_place_abu_darwish_mosque">Abu Darwish Mosque, Amman</string>
+    <string name="photo_place_dome_of_the_rock">Dome of the Rock, Al-Quds</string>
+    <string name="photo_place_amman">Amman from Citadel Hill</string>
+    <string name="photo_place_amman_citadel">Amman Citadel</string>
+    <string name="photo_place_petra_monastery">The Monastery, Petra</string>
+    <string name="photo_place_petra">Petra</string>
+    <string name="photo_place_wadi_rum">Wadi Rum</string>
+    <string name="photo_place_qasr_kharana">Qasr Kharana</string>
+    <string name="photo_place_dead_sea">Dead Sea</string>
+    <string name="photo_place_mount_nebo">View from Mount Nebo</string>
+    <string name="photo_place_jerash">Jerash</string>
+    <string name="photo_place_wadi_mujib">Wadi Mujib</string>
+    <string name="photo_place_dana">Dana Biosphere Reserve</string>
+    <!-- The phone app's Hijri format: month, day, year in English (hijri package "MMMM dd yyyy"). -->
+    <string name="hijri_date_format">%2$s %1$s %3$s</string>
+    <!-- The hijri package's month names, which the phone app shows. -->
+    <string-array name="hijri_months">
+        <item>Muharram</item>
+        <item>Safar</item>
+        <item>Rabi\' Al-Awwal</item>
+        <item>Rabi\' Al-Thani</item>
+        <item>Jumada Al-Awwal</item>
+        <item>Jumada Al-Thani</item>
+        <item>Rajab</item>
+        <item>Sha\'aban</item>
+        <item>Ramadan</item>
+        <item>Shawwal</item>
+        <item>Dhu Al-Qi\'dah</item>
+        <item>Dhu Al-Hijjah</item>
+    </string-array>
+    <string name="language_title">Language</string>
+    <string name="language_system">System default</string>
+    <string name="language_english" translatable="false">English</string>
+    <string name="language_arabic" translatable="false">العربية</string>
+    <string name="hijri_offset_title">Hijri date adjustment</string>
+    <string name="hijri_offset_none">No adjustment</string>
+    <plurals name="hijri_offset_plus">
+        <item quantity="one">+%1$d day</item>
+        <item quantity="other">+%1$d days</item>
+    </plurals>
+    <plurals name="hijri_offset_minus">
+        <item quantity="one">−%1$d day</item>
+        <item quantity="other">−%1$d days</item>
+    </plurals>
+    <string name="clock_format_title">Clock format</string>
+    <string name="clock_12_hour">12-hour (3:55 PM)</string>
+    <string name="clock_24_hour">24-hour (15:55)</string>
     <string name="slideshow_interval_title">Slideshow interval</string>
     <plurals name="slideshow_interval_format">
         <item quantity="one">%1$d second</item>
         <item quantity="other">%1$d seconds</item>
     </plurals>
 
-    <!-- Location status -->
-    <string name="location_current">Current location</string>
-    <string name="location_status_auto">Using this device\'s location.</string>
-    <string name="location_status_manual">Prayer times are calculated for %1$s.</string>
-    <string name="location_status_permission_missing">Location permission is off, so %1$s is used instead.</string>
-    <string name="grant_location_permission">Grant location permission</string>
-    <string name="open_system_settings">Open system settings</string>
+    <!-- About -->
+    <string name="about_title">About</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_credits_title">Created by</string>
+    <!-- Order matters: Ehab Amawi is credited first. -->
+    <string name="about_credits" translatable="false">Ehab Amawi\nMunes Bani Fawaz</string>
+    <string name="about_source">Prayer times are provided by the Ministry of Awqaf, Islamic Affairs and Holy Places, Jordan.</string>
+
+    <!-- Timetable status -->
     <string name="jordan_status_loading">Loading the official timetable…</string>
     <string name="jordan_status_ready">Official timetable in use for %1$s.</string>
-    <string name="jordan_status_unavailable">No official timetable is published for %1$s right now, so calculated times are used.</string>
-    <string name="jordan_status_not_configured">This build has no data token, so calculated times are used. See secrets.properties.example.</string>
-    <string name="jordan_status_no_areas">Could not load the Jordan area list. Connect to the network and reopen settings.</string>
+    <string name="jordan_status_unavailable">No official timetable is published for %1$s right now.</string>
+    <string name="jordan_areas_unavailable">City list not loaded yet. Connect to the internet.</string>
+    <string name="jordan_status_not_configured">This build has no data token, so prayer times cannot be loaded. See secrets.properties.example.</string>
 
     <!-- Screensaver overlay -->
     <string name="overlay_next_prayer">NEXT PRAYER: %1$s IN %2$s</string>
@@ -44,35 +110,4 @@
     <string name="prayer_maghrib">Maghrib</string>
     <string name="prayer_isha">Isha</string>
 
-    <!-- Manual location presets -->
-    <string name="city_abu_dhabi">Abu Dhabi, United Arab Emirates</string>
-    <string name="city_amman">Amman, Jordan</string>
-    <string name="city_baghdad">Baghdad, Iraq</string>
-    <string name="city_beirut">Beirut, Lebanon</string>
-    <string name="city_berlin">Berlin, Germany</string>
-    <string name="city_cairo">Cairo, Egypt</string>
-    <string name="city_casablanca">Casablanca, Morocco</string>
-    <string name="city_chicago">Chicago, United States</string>
-    <string name="city_damascus">Damascus, Syria</string>
-    <string name="city_dammam">Dammam, Saudi Arabia</string>
-    <string name="city_doha">Doha, Qatar</string>
-    <string name="city_dubai">Dubai, United Arab Emirates</string>
-    <string name="city_istanbul">Istanbul, Türkiye</string>
-    <string name="city_jakarta">Jakarta, Indonesia</string>
-    <string name="city_jeddah">Jeddah, Saudi Arabia</string>
-    <string name="city_jerusalem">Jerusalem</string>
-    <string name="city_karachi">Karachi, Pakistan</string>
-    <string name="city_kuala_lumpur">Kuala Lumpur, Malaysia</string>
-    <string name="city_kuwait_city">Kuwait City, Kuwait</string>
-    <string name="city_lahore">Lahore, Pakistan</string>
-    <string name="city_london">London, United Kingdom</string>
-    <string name="city_manama">Manama, Bahrain</string>
-    <string name="city_mecca">Mecca, Saudi Arabia</string>
-    <string name="city_medina">Medina, Saudi Arabia</string>
-    <string name="city_muscat">Muscat, Oman</string>
-    <string name="city_new_york">New York, United States</string>
-    <string name="city_paris">Paris, France</string>
-    <string name="city_riyadh">Riyadh, Saudi Arabia</string>
-    <string name="city_sydney">Sydney, Australia</string>
-    <string name="city_toronto">Toronto, Canada</string>
 </resources>

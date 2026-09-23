@@ -1,61 +1,61 @@
-# Custom TV Screensaver & Prayer Times
+# Jordan Prayer Times (Android TV)
 
-Native Kotlin Android TV DreamService targeting Android 14 (API 34).
+The Android TV edition of Jordan Prayer Times: a launcher app and a screensaver (DreamService)
+showing the official Jordanian prayer times. It shares its package name and Play listing with the
+phone and Wear OS apps. Native Kotlin, targeting Android 16 (API 36), minimum Android 8.0 (API 26).
 
 ## Features
 
-- Full-screen nature slideshow with a 15–70 second configurable interval and crossfade transitions.
-- Curated remote landscape images with bundled drawable fallback imagery when offline.
-- Offline prayer calculations for Fajr, Sunrise, Dhuhr, Asr, Maghrib, and Isha.
-- Optional official Jordan timetable for any of the areas that feed covers, with automatic
-  fallback to the calculation whenever a month or area is not published.
-- Automatic location using Google Play Services, or a manual pick from 30 preset cities.
-- Settings activity navigable with a TV remote D-pad, including the location permission prompt.
-- Current time, date, location, next prayer, and countdown overlay, refreshed on the minute
-  and following the device's 12/24-hour and locale settings.
-- Automatic 2–5 pixel overlay movement every 60 seconds to reduce OLED burn-in.
-- Correct DreamService registration and Android screensaver settings metadata.
+- Official prayer times from the Ministry of Awqaf, via `mbanifawaz/Jordan_Prayer_Times_API_Data`.
+  Nothing is calculated on the device.
+- City list straight from the feed's `cities.json` (the first entry, "الرجاء الاختيار", is the
+  default until a city is chosen, as on the phone).
+- Every published month is downloaded and kept on the device, so the app keeps working offline.
+- Home screen with clock, Gregorian and Hijri dates (formatted as in the phone app),
+  next-prayer countdown and a card per prayer.
+- Works fully offline after the first setup: times, cities and calendar are kept on the device;
+  the screensaver switches to its built-in photos when there is no internet.
+- Prayer Calendar: opens on today, step a day at a time, or list every downloaded day with
+  Gregorian and Hijri (Umm al-Qura) dates.
+- Screensaver: full-screen slideshow of Jordanian and Islamic landmarks from Wikimedia Commons,
+  each credited on screen, or four built-in photos offline; 5–70 second interval with crossfade;
+  clock, date, city and countdown overlay; 2–5 px overlay nudge every minute against burn-in.
+- Settings: city, language (English / Arabic, right-to-left), 12/24-hour clock, Hijri date
+  adjustment (−2 to +2 days), online or offline photos, slideshow interval.
+- Dark theme matching the phone app, D-pad navigable throughout.
 
-## Open and run
+## Build
 
-Open `android-tv-screensaver` in Android Studio, allow Gradle sync to download dependencies, then run the `app` configuration on an Android TV device or emulator. JDK 17 is required.
+JDK 17+ and the Android SDK are required.
 
-After installation, enable **Custom TV Screensaver & Prayer Times** from the device's screen saver / dream settings. The app settings can also be opened from the Android TV launcher, or via **Customize** on the screensaver tile.
-
-## Location
-
-Automatic location reads the device's current balanced-accuracy location. A DreamService cannot
-request permissions, so the settings screen asks for it; if the grant is missing or denied the
-prayer engine falls back to the selected preset city (Amman, Jordan by default — 31.9539, 35.9106).
-
-Choose **Manual location** to skip the device lookup entirely and calculate for a preset city.
-
-## Official Jordan timetable
-
-Selecting **Jordan (official timetable)** as the location mode uses the published timetable from
-`mbanifawaz/Jordan_Prayer_Times_API_Data` instead of calculating. That repository is private, so
-the feature needs a token: copy `secrets.properties.example` to `secrets.properties` (gitignored)
-and set `jordanApiToken`.
-
-Use a GitHub **fine-grained** token with repository access limited to that one repo and
-`Contents: Read-only`. Anything placed there is compiled into the APK and can be extracted from
-it, so the token's scope is the only thing limiting the damage — never use an account-wide or
-classic token.
-
-Without the token the app still builds and runs; it simply calculates every prayer time and says
-so on the settings screen. It also falls back to calculating when the feed has no data for the
-selected area or the current month, since only a rolling window of months is published. Fetched
-months are cached on device, so the screensaver keeps working offline.
-
-## Release builds
-
-`./gradlew assembleRelease` runs R8 and resource shrinking. To get a signed APK, copy
-`keystore.properties.example` to `keystore.properties` (gitignored) and fill in your keystore
-details:
-
-```
-keytool -genkeypair -v -keystore release.jks -alias tv-screensaver \
-        -keyalg RSA -keysize 2048 -validity 10000
+```bash
+./gradlew assembleDebug      # app-debug.apk, installs beside the release build
+./gradlew assembleRelease    # R8 + resource shrinking
+./gradlew bundleRelease      # app-release.aab for Google Play
 ```
 
-Without that file the release build still succeeds and produces an unsigned APK.
+After installing, pick **Jordan Prayer Times** under Settings › Device Preferences › Screen saver.
+
+## Data token
+
+Copy `secrets.properties.example` to `secrets.properties` (gitignored) and set `jordanApiToken`.
+Without it the app builds but cannot show any prayer times. The token is compiled into the APK
+and can be extracted from it, so use a fine-grained token limited to
+`Jordan_Prayer_Times_API_Data` with `Contents: Read-only`.
+
+## Signing
+
+Copy `keystore.properties.example` to `keystore.properties` (gitignored). Release builds must be
+signed with the same upload key as the phone app, since they share the Play listing. Without that
+file the release build still succeeds and produces an unsigned APK.
+
+## Photo credits
+
+Screensaver photos are from Wikimedia Commons under CC BY / CC BY-SA licenses; the place, author
+and license are shown on screen with each photo, and listed in
+`app/src/main/java/com/example/customtvscreensaver/PhotoRepository.kt`.
+
+## Store screenshots
+
+`screenshots/` holds the Play listing assets: eight 1920×1080 Android TV screenshots (Play's maximum),
+mixing English (`_en_`) and Arabic (`_ar_`), numbered in upload order, and `tv_banner_1280x720.png`.

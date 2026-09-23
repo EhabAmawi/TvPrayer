@@ -18,7 +18,7 @@ val hasReleaseSigning = keystoreProperties.getProperty("storeFile") != null
 
 // Read-only GitHub token for the private Jordan prayer-times data repo. Kept out of the repo
 // (secrets.properties is gitignored, see secrets.properties.example). When it is absent the app
-// still builds and simply falls back to the adhan calculation everywhere.
+// still builds, but no prayer times can be loaded.
 val secretsFile = rootProject.file("secrets.properties")
 val secrets = Properties().apply {
     if (secretsFile.exists()) secretsFile.inputStream().use { load(it) }
@@ -27,14 +27,18 @@ val jordanApiToken = secrets.getProperty("jordanApiToken").orEmpty().trim()
 
 android {
     namespace = "com.example.customtvscreensaver"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.customtvscreensaver"
+        // Same listing as the phone and watch apps, so it must match theirs exactly. The
+        // namespace (Kotlin package, R class) is independent and stays as it is.
+        applicationId = "com.mbf.jordan_prayer_times_app"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        // Google Play requires API 36 for new releases.
+        targetSdk = 36
+        // Shares a Play listing with the phone (3.0.0+24) and Wear apps, so it must exceed their codes.
+        versionCode = 25
+        versionName = "3.0.0"
 
         buildConfigField(
             "String",
@@ -61,7 +65,11 @@ android {
 
     buildTypes {
         debug {
+            // Mirrors the phone app, so a debug build installs beside the released app.
+            applicationIdSuffix = ".debug"
             isMinifyEnabled = false
+            // Same names as the phone app, so the two builds are told apart on the launcher.
+            resValue("string", "app_name", "Jordan Prayer Times (Debug)")
         }
         release {
             isMinifyEnabled = true
@@ -71,6 +79,15 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.findByName("release")
+            resValue("string", "app_name", "Jordan Prayer Times")
+        }
+    }
+
+    // The in-app language switch needs every language in every install, so the Play bundle must
+    // not split by language (lint AppBundleLocaleChanges).
+    bundle {
+        language {
+            enableSplit = false
         }
     }
 
@@ -87,10 +104,7 @@ android {
         warningsAsErrors = true
         abortOnError = true
         disable += setOf(
-            // Advisory only, and both would force a compileSdk bump to satisfy:
-            // OldTargetApi wants targetSdk > 34, which is this project's stated target,
-            // and GradleDependency flags newer AndroidX releases that require compileSdk 35+.
-            "OldTargetApi",
+            // Advisory only: flags newer AndroidX releases, which are not needed.
             "GradleDependency",
         )
     }
@@ -100,9 +114,9 @@ dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.leanback:leanback:1.0.0")
+    // Launch splash, as the Wear OS app does (installSplashScreen in PrayerTimesActivity).
+    implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("io.coil-kt:coil:2.7.0")
-    implementation("com.batoulapps.adhan:adhan:1.2.1")
-    implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     // Already on the classpath transitively via Coil; declared because we use it directly.
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
