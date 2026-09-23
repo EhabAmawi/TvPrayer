@@ -12,3 +12,7 @@ keystore.properties
 secrets.properties
 *.jks
 *.keystore
+
+# Release builds embed the data token (BuildConfig); committing one gets it revoked by GitHub secret scanning
+*.aab
+*.apk
