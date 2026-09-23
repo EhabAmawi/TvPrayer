@@ -18,7 +18,7 @@
     <string name="calendar_empty">No prayer times downloaded yet.\nChoose your city and connect to the internet.</string>
     <string name="choose_city_prompt">Choose your city to see prayer times</string>
     <string name="times_unavailable">Prayer times are not available right now</string>
-    <string name="screensaver_hint">Also available as your TV screensaver: Settings › Device Preferences › Screen saver.</string>
+    <string name="screensaver_hint">Also available as your TV screensaver: open Settings › Screensaver.</string>
 
     <!-- Settings screen -->
     <string name="settings_title">Settings</string>
@@ -61,6 +61,30 @@
         <item>Dhu Al-Qi\'dah</item>
         <item>Dhu Al-Hijjah</item>
     </string-array>
+    <string name="screensaver_title">Screensaver</string>
+    <string name="screensaver_set">Set as the TV\'s screensaver</string>
+    <string name="screensaver_start_now">Start the screensaver now</string>
+    <string name="screensaver_start_failed_body">This TV does not allow starting the screensaver from an app. It will start on its own when the TV is idle.</string>
+    <string name="screensaver_start_after">Start after the TV is idle for</string>
+    <string name="screensaver_start_after_failed_body">This TV did not accept the new start time. It can still be changed in the TV\'s own settings.</string>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
+    </plurals>
+    <string name="screensaver_restore">Restore the previous screensaver</string>
+    <string name="screensaver_working">Setting the screensaver… if the TV asks to allow USB debugging, choose Always allow, then Allow.</string>
+    <string name="screensaver_status_active">Jordan Prayer Times is your TV\'s screensaver.</string>
+    <string name="screensaver_status_inactive">Jordan Prayer Times is not your TV\'s screensaver yet.</string>
+    <string name="screensaver_needs_debugging_title">Turn on USB debugging</string>
+    <string name="screensaver_needs_debugging_body">This TV does not let apps choose the screensaver directly, so it has to be allowed once:\n\n1. Settings › System › About: select Android TV OS build 7 times.\n2. Settings › System › Developer options: turn on USB debugging.\n3. Come back here and select Set as the TV\'s screensaver.\n\nWhen it is set you can turn USB debugging off again.</string>
+    <string name="screensaver_not_allowed_title">Not allowed on the TV</string>
+    <string name="screensaver_not_allowed_body">The TV did not allow the connection. Select Set as the TV\'s screensaver again, and when the TV asks to allow USB debugging choose Always allow from this computer, then Allow.</string>
+    <string name="screensaver_failed_title">Could not set the screensaver</string>
+    <string name="screensaver_failed_body">This TV did not accept the change. Its screensaver can still be chosen from a computer with adb; see the app\'s page for the steps.</string>
     <string name="language_title">Language</string>
     <string name="language_system">System default</string>
     <string name="language_english" translatable="false">English</string>

@@ -37,6 +37,11 @@ class AppPreferences(context: Context) {
         get() = preferences.getInt(KEY_HIJRI_OFFSET, 0).takeIf { it in HIJRI_OFFSETS } ?: 0
         set(value) = preferences.edit { putInt(KEY_HIJRI_OFFSET, value.coerceIn(HIJRI_OFFSETS)) }
 
+    /** The screensaver that was set before this app replaced it, so it can be put back. */
+    var previousScreensaver: String?
+        get() = preferences.getString(KEY_PREVIOUS_SCREENSAVER, null)
+        set(value) = preferences.edit { putString(KEY_PREVIOUS_SCREENSAVER, value) }
+
     /** True: Wikimedia Commons photos over the network. False: only the four bundled ones. */
     var useOnlinePhotos: Boolean
         get() = preferences.getBoolean(KEY_ONLINE_PHOTOS, true)
@@ -62,6 +67,7 @@ class AppPreferences(context: Context) {
         private const val KEY_INTERVAL = "slideshow_interval"
         private const val KEY_ONLINE_PHOTOS = "use_online_photos"
         private const val KEY_LANGUAGE = "app_language"
+        private const val KEY_PREVIOUS_SCREENSAVER = "previous_screensaver"
         private const val KEY_HIJRI_OFFSET = "hijri_offset_days"
 
         /** The phone app's range: -2 to +2 days. */

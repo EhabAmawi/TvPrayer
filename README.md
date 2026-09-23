@@ -20,6 +20,9 @@ phone and Wear OS apps. Native Kotlin, targeting Android 16 (API 36), minimum An
 - Screensaver: full-screen slideshow of Jordanian and Islamic landmarks from Wikimedia Commons,
   each credited on screen, or four built-in photos offline; 5–70 second interval with crossfade;
   clock, date, city and countdown overlay; 2–5 px overlay nudge every minute against burn-in.
+- Settings › Screensaver: set the app as the TV's screensaver even on Google TV (which hides the
+  picker), start it now, choose how long the TV waits before starting it, or restore the previous one.
+  The first time needs USB debugging on once (the TV asks to allow it).
 - Settings: city, language (English / Arabic, right-to-left), 12/24-hour clock, Hijri date
   adjustment (−2 to +2 days), online or offline photos, slideshow interval.
 - Dark theme matching the phone app, D-pad navigable throughout.
@@ -34,7 +37,7 @@ JDK 17+ and the Android SDK are required.
 ./gradlew bundleRelease      # app-release.aab for Google Play
 ```
 
-After installing, pick **Jordan Prayer Times** under Settings › Device Preferences › Screen saver.
+After installing, open the app's **Settings › Screensaver** and select **Set as the TV's screensaver**.
 
 ## Data
 

@@ -2,17 +2,17 @@
 Jordan Prayer Times is now on Android TV!
 • Official prayer times from the Ministry of Awqaf for your city
 • Screensaver with photos of Jordan's mosques and landmarks, the time and the next prayer
-• Prayer Calendar for every downloaded day, with Hijri dates
-• Arabic and English
-• Hijri date adjustment
+• Set it as the screensaver from the app, even on Google TV, and choose when it starts
+• Prayer Calendar with Hijri dates
+• Arabic and English, with Hijri date adjustment
 • Works offline after the first setup
 </en-US>
 <ar>
 تطبيق أوقات الصلاة في الأردن متوفر الآن على Android TV!
 • أوقات الصلاة الرسمية من وزارة الأوقاف لمدينتك
 • شاشة توقف بصور مساجد الأردن ومعالمه مع الساعة والصلاة القادمة
-• تقويم الصلاة لكل الأيام المحملة مع التاريخ الهجري
-• العربية والإنجليزية
-• تعديل التاريخ الهجري
+• عيّنه كشاشة توقف من داخل التطبيق حتى على Google TV، واختر متى تبدأ
+• تقويم الصلاة مع التاريخ الهجري
+• العربية والإنجليزية، مع تعديل التاريخ الهجري
 • يعمل دون إنترنت بعد الإعداد الأول
 </ar>

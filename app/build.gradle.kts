@@ -28,7 +28,7 @@ android {
         // Google Play requires API 36 for new releases.
         targetSdk = 36
         // Shares a Play listing with the phone and Wear apps: every upload needs a code Play has not seen.
-        versionCode = 27
+        versionCode = 30
         versionName = "3.0.0"
     }
 
@@ -105,4 +105,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     // Already on the classpath transitively via Coil; declared because we use it directly.
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    // Minimal adb client: Settings › Screensaver talks to the TV's own adb once to grant
+    // WRITE_SECURE_SETTINGS (see ScreensaverSetter).
+    implementation("dev.mobile:dadb:2.0.0")
 }

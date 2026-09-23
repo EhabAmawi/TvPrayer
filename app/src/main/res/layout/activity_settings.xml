@@ -61,6 +61,75 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
+            android:text="@string/screensaver_title"
+            android:textColor="@color/overlay_text"
+            android:textSize="20sp" />
+        <Button
+            android:id="@+id/set_screensaver_button"
+            android:layout_width="420dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/settings_control_background"
+            android:focusable="true"
+            android:text="@string/screensaver_set"
+            android:textAllCaps="false"
+            android:textColor="@color/overlay_text"
+            android:textSize="18sp" />
+        <Button
+            android:id="@+id/start_screensaver_button"
+            android:layout_width="420dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/settings_control_background"
+            android:focusable="true"
+            android:text="@string/screensaver_start_now"
+            android:textAllCaps="false"
+            android:textColor="@color/overlay_text"
+            android:textSize="18sp"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/start_after_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/screensaver_start_after"
+            android:textColor="@color/overlay_secondary"
+            android:textSize="16sp"
+            android:visibility="gone" />
+        <Spinner
+            android:id="@+id/start_after_spinner"
+            android:layout_width="420dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/settings_control_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:visibility="gone" />
+        <Button
+            android:id="@+id/restore_screensaver_button"
+            android:layout_width="420dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/settings_control_background"
+            android:focusable="true"
+            android:text="@string/screensaver_restore"
+            android:textAllCaps="false"
+            android:textColor="@color/overlay_text"
+            android:textSize="18sp"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/screensaver_status_text"
+            android:layout_width="420dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/overlay_secondary"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
             android:text="@string/language_title"
             android:textColor="@color/overlay_text"
             android:textSize="20sp" />

@@ -18,11 +18,43 @@
     <string name="calendar_empty">لا توجد أوقات صلاة مخزنة بعد.\nاختر مدينتك واتصل بالإنترنت.</string>
     <string name="choose_city_prompt">اختر مدينتك لعرض أوقات الصلاة</string>
     <string name="times_unavailable">أوقات الصلاة غير متوفرة حالياً</string>
-    <string name="screensaver_hint">متوفر أيضاً كشاشة توقف للتلفاز: الإعدادات › تفضيلات الجهاز › شاشة التوقف.</string>
+    <string name="screensaver_hint">متوفر أيضاً كشاشة توقف للتلفاز: افتح الإعدادات › شاشة التوقف.</string>
 
     <!-- Settings screen -->
     <string name="settings_title">الإعدادات</string>
     <string name="jordan_area_title">المدينة</string>
+    <string name="screensaver_title">شاشة التوقف</string>
+    <string name="screensaver_set">تعيين كشاشة توقف التلفاز</string>
+    <string name="screensaver_start_now">تشغيل شاشة التوقف الآن</string>
+    <string name="screensaver_start_failed_body">لا يسمح هذا التلفاز بتشغيل شاشة التوقف من تطبيق. ستعمل تلقائياً عندما يكون التلفاز خاملاً.</string>
+    <string name="screensaver_start_after">تبدأ بعد خمول التلفاز لمدة</string>
+    <string name="screensaver_start_after_failed_body">لم يقبل هذا التلفاز وقت البدء الجديد. ما زال بالإمكان تغييره من إعدادات التلفاز نفسه.</string>
+    <plurals name="minutes">
+        <item quantity="zero">%1$d دقيقة</item>
+        <item quantity="one">دقيقة واحدة</item>
+        <item quantity="two">دقيقتان</item>
+        <item quantity="few">%1$d دقائق</item>
+        <item quantity="many">%1$d دقيقة</item>
+        <item quantity="other">%1$d دقيقة</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="zero">%1$d ساعة</item>
+        <item quantity="one">ساعة واحدة</item>
+        <item quantity="two">ساعتان</item>
+        <item quantity="few">%1$d ساعات</item>
+        <item quantity="many">%1$d ساعة</item>
+        <item quantity="other">%1$d ساعة</item>
+    </plurals>
+    <string name="screensaver_restore">استعادة شاشة التوقف السابقة</string>
+    <string name="screensaver_working">جارٍ تعيين شاشة التوقف… إذا سألك التلفاز عن السماح بتصحيح أخطاء USB، اختر السماح دائماً ثم سماح.</string>
+    <string name="screensaver_status_active">مواقيت الصلاة الأردن هي شاشة توقف تلفازك.</string>
+    <string name="screensaver_status_inactive">مواقيت الصلاة الأردن ليست شاشة توقف تلفازك بعد.</string>
+    <string name="screensaver_needs_debugging_title">فعّل تصحيح أخطاء USB</string>
+    <string name="screensaver_needs_debugging_body">هذا التلفاز لا يسمح للتطبيقات باختيار شاشة التوقف مباشرة، لذا يجب السماح بذلك مرة واحدة:\n\n١. الإعدادات › النظام › حول: اضغط على إصدار Android TV OS سبع مرات.\n٢. الإعدادات › النظام › خيارات المطورين: فعّل تصحيح أخطاء USB.\n٣. عد إلى هنا واختر تعيين كشاشة توقف التلفاز.\n\nبعد التعيين يمكنك إيقاف تصحيح أخطاء USB مجدداً.</string>
+    <string name="screensaver_not_allowed_title">لم يُسمح على التلفاز</string>
+    <string name="screensaver_not_allowed_body">لم يسمح التلفاز بالاتصال. اختر تعيين كشاشة توقف التلفاز مرة أخرى، وعندما يسألك التلفاز عن السماح بتصحيح أخطاء USB اختر السماح دائماً من هذا الكمبيوتر ثم سماح.</string>
+    <string name="screensaver_failed_title">تعذّر تعيين شاشة التوقف</string>
+    <string name="screensaver_failed_body">لم يقبل هذا التلفاز التغيير. ما زال بالإمكان اختيار شاشة التوقف من كمبيوتر باستخدام adb؛ راجع صفحة التطبيق للخطوات.</string>
     <string name="language_title">اللغة</string>
     <string name="language_system">إعدادات النظام</string>
     <string name="hijri_offset_title">تعديل التاريخ الهجري</string>

@@ -60,7 +60,7 @@ What does work: a **phone** emulator, where `am start -a android.settings.DREAM_
 
 ## Architecture
 
-Twelve small Kotlin files, no DI, no ViewModels, no observable state. The settings UI and the dream communicate only through `SharedPreferences`, which the dream re-reads on each loop tick.
+Thirteen small Kotlin files, no DI, no ViewModels, no observable state. The settings UI and the dream communicate only through `SharedPreferences`, which the dream re-reads on each loop tick.
 
 ### One prayer-time source: the official Jordan feed
 
@@ -219,6 +219,19 @@ on `PrayerTimesActivity` only, `installSplashScreen()` before `super.onCreate`).
   photo as placeholder/error so the background never flashes. Verified on the emulator by
   breaking DNS (`settings put global private_dns_mode hostname` + an invalid
   `private_dns_specifier`); airplane mode and `http_proxy` do not cut the emulator's Ethernet.
+
+### Setting the screensaver from the app (`ScreensaverSetter`)
+
+Google TV hides the screensaver picker (only its own Ambient mode shows), and no system activity
+opens it, so Settings › Screensaver sets `Settings.Secure.screensaver_components` itself. That
+needs `WRITE_SECURE_SETTINGS`, a development permission only adb can grant: the first time, with
+USB debugging on, the app connects to the TV's **own** adb on `127.0.0.1:5555` with `dadb` (key pair
+in `filesDir/adb/`, the TV shows "Allow USB debugging?") and runs `pm grant … WRITE_SECURE_SETTINGS`
+plus `appops set … WRITE_SETTINGS allow` (the "Start after" delay is `Settings.System.SCREEN_OFF_TIMEOUT`).
+After that it writes directly and debugging can be turned off. "Start now" opens SystemUI's
+`Somnambulator`; "Restore" puts back the component saved in `AppPreferences.previousScreensaver`.
+Verified on a real Google TV (SWTV-22AE, Android 11). To reproduce on the emulator, run
+`adb tcpip 5555` first so the emulator's adbd listens on TCP.
 
 ### Strings
 
