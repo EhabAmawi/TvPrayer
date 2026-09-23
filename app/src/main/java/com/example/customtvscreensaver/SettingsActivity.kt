@@ -63,10 +63,6 @@ class SettingsActivity : LocalizedActivity() {
 
     /** Reports whether the chosen area actually has a published timetable right now. */
     private fun refreshJordanStatus() {
-        if (!jordanRepository.isConfigured) {
-            binding.locationStatusText.setText(R.string.jordan_status_not_configured)
-            return
-        }
         binding.locationStatusText.setText(R.string.jordan_status_loading)
         uiScope.launch {
             val area = prayerReader.area() ?: run {

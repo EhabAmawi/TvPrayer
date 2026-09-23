@@ -16,15 +16,6 @@ val keystoreProperties = Properties().apply {
 }
 val hasReleaseSigning = keystoreProperties.getProperty("storeFile") != null
 
-// Read-only GitHub token for the private Jordan prayer-times data repo. Kept out of the repo
-// (secrets.properties is gitignored, see secrets.properties.example). When it is absent the app
-// still builds, but no prayer times can be loaded.
-val secretsFile = rootProject.file("secrets.properties")
-val secrets = Properties().apply {
-    if (secretsFile.exists()) secretsFile.inputStream().use { load(it) }
-}
-val jordanApiToken = secrets.getProperty("jordanApiToken").orEmpty().trim()
-
 android {
     namespace = "com.example.customtvscreensaver"
     compileSdk = 36
@@ -37,14 +28,8 @@ android {
         // Google Play requires API 36 for new releases.
         targetSdk = 36
         // Shares a Play listing with the phone and Wear apps: every upload needs a code Play has not seen.
-        versionCode = 26
+        versionCode = 27
         versionName = "3.0.0"
-
-        buildConfigField(
-            "String",
-            "JORDAN_API_TOKEN",
-            "\"" + jordanApiToken.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
-        )
     }
 
     buildFeatures {

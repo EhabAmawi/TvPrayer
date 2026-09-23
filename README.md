@@ -36,12 +36,10 @@ JDK 17+ and the Android SDK are required.
 
 After installing, pick **Jordan Prayer Times** under Settings › Device Preferences › Screen saver.
 
-## Data token
+## Data
 
-Copy `secrets.properties.example` to `secrets.properties` (gitignored) and set `jordanApiToken`.
-Without it the app builds but cannot show any prayer times. The token is compiled into the APK
-and can be extracted from it, so use a fine-grained token limited to
-`Jordan_Prayer_Times_API_Data` with `Contents: Read-only`.
+Prayer times are read from the public `Jordan_Prayer_Times_API_Data` repository with no token, so
+there is no secret in the app. Never commit release bundles or APKs (they are gitignored).
 
 ## Signing
 

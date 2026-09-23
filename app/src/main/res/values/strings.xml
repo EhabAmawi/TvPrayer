@@ -97,7 +97,6 @@
     <string name="jordan_status_ready">Official timetable in use for %1$s.</string>
     <string name="jordan_status_unavailable">No official timetable is published for %1$s right now.</string>
     <string name="jordan_areas_unavailable">City list not loaded yet. Connect to the internet.</string>
-    <string name="jordan_status_not_configured">This build has no data token, so prayer times cannot be loaded. See secrets.properties.example.</string>
 
     <!-- Screensaver overlay -->
     <string name="overlay_next_prayer">NEXT PRAYER: %1$s IN %2$s</string>

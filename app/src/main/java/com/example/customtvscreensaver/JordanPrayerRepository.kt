@@ -21,8 +21,7 @@ import java.util.concurrent.TimeUnit
  * The official Jordan timetable, with disk caching so the screensaver keeps working offline.
  *
  * Everything here degrades to null rather than throwing: only a rolling window of months is
- * published (September is typically absent in August), one area has no file at all, and the
- * token may not be configured in this build. Every one of those cases means "no times
+ * published (September is typically absent in August), one area has no file at all, and  Every one of those cases means "no times
  * available", which callers show as such, so nothing is surfaced as an error.
  */
 class JordanPrayerRepository(context: Context) {
@@ -38,9 +37,6 @@ class JordanPrayerRepository(context: Context) {
     private val parsedMonths = mutableMapOf<String, Map<String, List<TimedPrayer>>>()
     private val lastFailureAt = mutableMapOf<String, Long>()
     private var cachedAreas: List<String>? = null
-
-    /** False when this build has no data token, in which case the feed is simply unavailable. */
-    val isConfigured: Boolean get() = BuildConfig.JORDAN_API_TOKEN.isNotBlank()
 
     /** Area names exactly as the feed publishes them; empty when never fetched and offline. */
     suspend fun areas(): List<String> = withContext(Dispatchers.IO) {
@@ -78,8 +74,7 @@ class JordanPrayerRepository(context: Context) {
      * used.
      */
     suspend fun prefetch(area: String, now: Date): Boolean = withContext(Dispatchers.IO) {
-        if (!isConfigured) return@withContext false
-        val listing = fetch(MONTHLY_PATH, ACCEPT_JSON) ?: return@withContext false
+        val listing = fetch(MONTHLY_PATH, listing = true) ?: return@withContext false
         val names = runCatching {
             val array = JSONArray(listing)
             List(array.length()) { array.getJSONObject(it).optString("name") }
@@ -178,20 +173,28 @@ class JordanPrayerRepository(context: Context) {
      * after six hours, so a permanently missing month is not re-requested every overlay tick.
      */
     private fun shouldAttemptFetch(key: String, hasCache: Boolean): Boolean {
-        if (!isConfigured) return false
         val failedAt = lastFailureAt[key] ?: return true
         val retryAfter = if (hasCache) RETRY_AFTER_MILLIS else FIRST_FETCH_RETRY_MILLIS
         return System.currentTimeMillis() - failedAt >= retryAfter
     }
 
-    private fun fetch(remotePath: String, accept: String = ACCEPT_RAW): String? {
+    /**
+     * The data repo is public and read without any credential, so no app ever carries a token
+     * (a token baked into a build was revoked by GitHub secret scanning once it was pushed).
+     * Files come from raw.githubusercontent.com, which has no API rate limit; only the monthly/
+     * directory listing needs the REST API, which allows 60 unauthenticated requests an hour per
+     * device — far more than one listing per session.
+     */
+    private fun fetch(remotePath: String, listing: Boolean = false): String? {
         val encoded = remotePath.split('/').joinToString("/") { Uri.encode(it) }
-        val request = Request.Builder()
-            .url("$API_BASE/$REPO/contents/$encoded")
-            .header("Authorization", "Bearer ${BuildConfig.JORDAN_API_TOKEN}")
-            .header("Accept", accept)
-            .header("X-GitHub-Api-Version", "2022-11-28")
-            .build()
+        val request = if (listing) {
+            Request.Builder()
+                .url("$API_BASE/$REPO/contents/$encoded")
+                .header("Accept", ACCEPT_JSON)
+                .header("X-GitHub-Api-Version", "2022-11-28")
+        } else {
+            Request.Builder().url("$RAW_BASE/$REPO/$BRANCH/$encoded")
+        }.build()
         return try {
             client.newCall(request).execute().use { response ->
                 if (response.isSuccessful) response.body?.string() else null
@@ -216,6 +219,8 @@ class JordanPrayerRepository(context: Context) {
 
     private companion object {
         const val API_BASE = "https://api.github.com/repos"
+        const val RAW_BASE = "https://raw.githubusercontent.com"
+        const val BRANCH = "main"
         const val REPO = "mbanifawaz/Jordan_Prayer_Times_API_Data"
         const val CITIES_PATH = "cities"
         const val CITIES_FILE = "cities.json"
@@ -227,9 +232,6 @@ class JordanPrayerRepository(context: Context) {
         const val DATE_PATTERN = "dd/MM/yyyy"
         val MONTH_KEY = Regex("""\d{4}_\d{2}""")
         const val TIMEOUT_SECONDS = 15L
-
-        /** File contents as-is. */
-        const val ACCEPT_RAW = "application/vnd.github.raw+json"
 
         /** Directory listings, which have no raw form. */
         const val ACCEPT_JSON = "application/vnd.github+json"

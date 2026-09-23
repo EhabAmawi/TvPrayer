@@ -103,7 +103,6 @@
     <string name="jordan_status_ready">التقويم الرسمي مستخدم لـ %1$s.</string>
     <string name="jordan_status_unavailable">لا يوجد تقويم رسمي منشور لـ %1$s حالياً.</string>
     <string name="jordan_areas_unavailable">لم يتم تحميل قائمة المدن بعد. اتصل بالإنترنت.</string>
-    <string name="jordan_status_not_configured">هذه النسخة بدون رمز البيانات، لذا لا يمكن تحميل أوقات الصلاة.</string>
 
     <!-- Screensaver overlay -->
     <string name="overlay_next_prayer">الصلاة القادمة: %1$s بعد %2$s</string>

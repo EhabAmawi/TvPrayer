@@ -26,22 +26,15 @@ Lint runs with `warningsAsErrors = true`, so a new warning fails the build. Only
 
 The manifest declares `android.software.leanback` **required**: Play's Android TV track rejects bundles that do not.
 
-### The Jordan data token
+### No data token
 
-`app/build.gradle.kts` also reads an optional gitignored `secrets.properties` (see
-`secrets.properties.example`) and exposes `jordanApiToken` as `BuildConfig.JORDAN_API_TOKEN`.
-Absent, the build still succeeds but `JordanPrayerRepository.isConfigured` is false, so **no
-prayer times can be shown** (there is no on-device calculation) and the settings screen says so.
-
-The token currently baked in is the phone app's (same `GITHUB_TOKEN` as its `.env`): fine-grained,
-limited to `Jordan_Prayer_Times_API_Data` only, but with Contents **Read and Write** — narrow it to
-read-only on GitHub. (GitHub's `/user/repos` lists every repo the account can see, public ones
-included, whatever the token's scope, so it is not a way to check a token's access.)
-
-**Only ever put a fine-grained token scoped to `Contents: Read-only` on
-`mbanifawaz/Jordan_Prayer_Times_API_Data` in that file.** Whatever goes in is compiled into the
-APK and is trivially extractable, so the scope *is* the security boundary. Never an account-wide
-or classic token.
+The data repo `mbanifawaz/Jordan_Prayer_Times_API_Data` is **public** and the app reads it with no
+credential: files from `raw.githubusercontent.com/<repo>/main/…` (no rate limit), and only the
+`monthly/` directory listing from the REST API, unauthenticated (60 requests/hour per device). A
+token used to be compiled into `BuildConfig`; when a build containing it was committed and pushed,
+GitHub secret scanning revoked it and every installed phone app lost its data feed. **Never put a
+token back into any app build**, and never commit an `.aab` or `.apk` (both are gitignored). The
+scraper (`Jordan_Prayer_Times_API`) has its own write token on its server only.
 
 ### Release signing
 
@@ -73,7 +66,7 @@ Twelve small Kotlin files, no DI, no ViewModels, no observable state. The settin
 
 Every time shown comes from `mbanifawaz/Jordan_Prayer_Times_API_Data` (Ministry of Awqaf data).
 **Nothing is calculated on the device** — adhan was removed on purpose. When the feed cannot
-answer (no token, month not published, area has no file) the snapshot is `null` and both screens
+answer (offline with no cache, month not published, area has no file) the snapshot is `null` and both screens
 show "not available" with `--:--`. Don't reintroduce a calculated fallback without asking.
 
 `buildSnapshot()` in `PrayerSchedule.kt` is the single place that decides "which prayer is next".
